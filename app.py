@@ -2,6 +2,19 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 
+# Simple Password Protection
+def check_password():
+    if "password" not in st.session_state:
+        st.session_state["password"] = ""
+    
+    if st.session_state["password"] != "lovedrum":
+        st.text_input("Enter Password to see spots", type="password", key="password")
+        return False
+    return True
+
+if check_password():
+    # ALL YOUR MAP CODE GOES HERE
+    st.write("Welcome to the secret map!")
 # 1. Force the page to use the full width of the phone screen
 st.set_page_config(page_title="Pro Angler GPS", layout="wide", initial_sidebar_state="collapsed")
 
@@ -42,4 +55,5 @@ st_folium(m, use_container_width=True)
 
 # 6. Add a "Log Visit" button at the bottom
 if st.button("➕ Log New Spot at Current GPS"):
+
     st.write("Feature coming soon: Saving to Database!")
