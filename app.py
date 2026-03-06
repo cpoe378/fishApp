@@ -26,7 +26,7 @@ def check_password():
 
 # 3. The Whole App
 if check_password():
-   # st.title("🎣Secret Spots")
+    st.title("Fish Finder")
 # 1. Force the page to use the full width of the phone screen
 st.set_page_config(page_title="Pro Drum Angler GPS", layout="wide", initial_sidebar_state="collapsed")
 
@@ -68,5 +68,6 @@ st_folium(m, use_container_width=True)
 # 6. Add a "Log Visit" button at the bottom
 if st.button("➕ Log New Spot at Current GPS"):
     st.write("Feature coming soon: Saving to Database!")
+
 
 
