@@ -16,7 +16,7 @@ def check_password():
         st.title("🔒 Access Restricted")
         password = st.text_input("Enter the Secret Key to view spots", type="password")
         if st.button("Unlock Map"):
-            if password == "lovedrum": # Change this to your password!
+            if password == "lovedrum": 
                 st.session_state["password_correct"] = True
                 st.rerun()
             else:
@@ -26,7 +26,7 @@ def check_password():
 
 # 3. The Whole App
 if check_password():
-    st.title("🎣Secret Spots")
+   # st.title("🎣Secret Spots")
 # 1. Force the page to use the full width of the phone screen
 st.set_page_config(page_title="Pro Drum Angler GPS", layout="wide", initial_sidebar_state="collapsed")
 
@@ -43,7 +43,7 @@ st.title("📍 Drum Locator")
 # 3. Create a Map with Satellite Imagery (Looks more like a pro app)
 # We use Esri World Imagery for that "Google Earth" look
 m = folium.Map(
-    location=[38.394412, -76.490068], 
+    location=[46.108.394412, -80.686], 
     zoom_start=15,
     tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attr='Esri'
@@ -68,4 +68,5 @@ st_folium(m, use_container_width=True)
 # 6. Add a "Log Visit" button at the bottom
 if st.button("➕ Log New Spot at Current GPS"):
     st.write("Feature coming soon: Saving to Database!")
+
 
