@@ -58,7 +58,3 @@ folium.Marker(
 ).add_to(m)
 
 st_folium(m, use_container_width=True, height=600)
-
-
-
-
