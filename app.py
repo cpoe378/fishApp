@@ -58,7 +58,7 @@ spots = [
 for spot in spots:
     folium.Marker(
         location=spot["loc"],
-        popup=spot["name"],
+        popup=spot["fish"],
         icon=folium.Icon(color='red', icon='fish', prefix='fa')
     ).add_to(m)
 
@@ -68,5 +68,6 @@ st_folium(m, use_container_width=True)
 # 6. Add a "Log Visit" button at the bottom
 if st.button("➕ Log New Spot at Current GPS"):
     st.write("Feature coming soon: Saving to Database!")
+
 
 
