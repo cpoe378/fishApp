@@ -1,60 +1,71 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-import base64
-from pathlib import Path
 
-# 1. Page Config (Mobile first)
-st.set_page_config(page_title="Sawpit Fishing App", layout="wide", initial_sidebar_state="collapsed")
+# 1. Page Config (Always at the top)
+st.set_page_config(page_title="Mission Fishing Map", layout="wide")
 
-# 2. LOGIC: Convert the logo into an HTML-readable format
-# This function loads the actual image_0.png file and encodes it
-def get_image_base64(image_path):
-    img_bytes = Path(image_path).read_bytes()
-    encoded_img = base64.b64encode(img_bytes).decode('utf-8')
-    return f"data:image/png;base64,{encoded_img}"
+# 2. Simple Password Logic
+def check_password():
+    """Returns True if the user had the correct password."""
+    if "password_correct" not in st.session_state:
+        st.session_state["password_correct"] = False
 
-# Try to load the logo. If it fails, we fall back to a standard title.
-try:
-    # IMPORTANT: Ensure 'image_0.png' is in the exact same folder as this script.
-    logo_file_path = "image_0.png" 
-    logo_base64 = get_image_base64(logo_file_path)
+    if not st.session_state["password_correct"]:
+        # Show input for password
+        st.title("🔒 Access Restricted")
+        password = st.text_input("Enter the Secret Key to view spots", type="password")
+        if st.button("Unlock Map"):
+            if password == "lovedrum": 
+                st.session_state["password_correct"] = True
+                st.rerun()
+            else:
+                st.error("No fish for you.")
+        return False
+    return True
 
-    # 3. Create a custom Header with HTML and CSS
-    # We create a flexbox to align the logo and the text on the same line.
-    st.markdown(
-        f"""
-        <div style="display: flex; align-items: center; justify-content: start; gap: 20px; padding-bottom: 20px;">
-            <img src="{logo_base64}" width="80" style="border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.3);">
-            <div>
-                <h1 style="margin: 0; font-size: 2.8rem; color: #1E1E1E;">Sawpit Fishing</h1>
-                <p style="margin: 0; font-size: 1.1rem; color: #555;">Private Spots Network</p>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+# 3. The Whole App
+if check_password():
+    st.title("Fish Finder")
+# 1. Force the page to use the full width of the phone screen
+st.set_page_config(page_title="Pro Drum Angler GPS", layout="wide", initial_sidebar_state="collapsed")
 
-except FileNotFoundError:
-    # Fallback if the logo is missing.
-    st.title("Sawpit Fishing App (Logo Missing)")
-    st.error(f"Error: Could not find '{logo_file_path}'. Make sure it's in the same folder as app.py.")
+# 2. Add some "App-like" styling with CSS
+st.markdown("""
+    <style>
+    .main > div { padding: 0px; }
+    iframe { width: 100% !important; height: 80vh !important; }
+    </style>
+    """, unsafe_allow_html=True)
 
-# 4. (Optional) Password check if needed...
+st.title("📍 Drum Locator")
 
-# 5. The Map Logic (The 'Honey Holes')
+# 3. Create a Map with Satellite Imagery (Looks more like a pro app)
+# We use Esri World Imagery for that "Google Earth" look
 m = folium.Map(
-    location=[29.7604, -95.3698], # Centered on a sample bay
+    location=[46.108, -80.686], 
     zoom_start=15,
     tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attr='Esri World Imagery'
+    attr='Esri'
 )
 
-# Custom markers for your club
-folium.Marker(
-    [29.7604, -95.3698], 
-    popup="The Sawpit Hole (Bass)", 
-    icon=folium.Icon(color='darkblue', icon='fish', prefix='fa')
-).add_to(m)
+# 4. Define your spots with custom "Fish" icons
+spots = [
+    {"loc": [38.391448, -76.489086], "name": "Deep Hole", "fish": "Fucking Drum"},
+    {"loc": [38.390118, -76.485986], "name": "Pier", "fish": "Perch"}
+]
 
-st_folium(m, use_container_width=True, height=600)
+for spot in spots:
+    folium.Marker(
+        location=spot["loc"],
+        popup=spot["name"],
+        icon=folium.Icon(color='red', icon='fish', prefix='fa')
+    ).add_to(m)
+
+# 5. Display the map
+st_folium(m, use_container_width=True)
+
+# 6. Add a "Log Visit" button at the bottom
+if st.button("➕ Log New Spot at Current GPS"):
+    st.write("Feature coming soon: Saving to Database!")
+
